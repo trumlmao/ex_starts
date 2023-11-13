@@ -37,31 +37,57 @@ switch( $action ) {
         }
         break;
         case 'Modify Task':
-            $modified_task = filter_input(INPUT_POST, 'modifiedtask');
-            $task_index = filter_input(INPUT_POST, 'modifiedtaskid', FILTER_VALIDATE_INT);
-            
+            $task_index = filter_input(INPUT_POST, 'taskid', FILTER_VALIDATE_INT);
             if ($task_index === NULL || $task_index === FALSE) {
                 $errors[] = 'The task cannot be modified.';
-            } elseif (empty($modified_task)) {
-                $errors[] = 'The modified task cannot be empty.';
             } else {
-                // Update the task at the specified index
-                $task_list[$task_index] = $modified_task;
+                $task_to_modify = $task_list[$task_index];
             }
             break;
         
-/*
-    case 'Modify Task':
+
+    // case 'Modify Task':
     
-    case 'Save Changes':
+    // case 'Save Changes':
+        case 'Save Changes':
+            $i = filter_input(INPUT_POST, 'modifiedtaskid', FILTER_VALIDATE_INT);
+            $modified_task = filter_input(INPUT_POST, 'modifiedtask');
+            if (empty($modified_task)) {
+                $errors[] = 'The modified task cannot be empty.';
+            } elseif($i === NULL || $i === FALSE) {
+                $errors[] = 'The task cannot be modified.';        
+            } else {
+                $task_list[$i] = $modified_task;
+                $modified_task = '';
+            }
+            break;
     
-    case 'Cancel Changes':
+    // case 'Cancel Changes':
+        case 'Cancel Changes':
+            $modified_task = '';
+            break;
+    // case 'Promote Task':
+        case 'Promote Task':
+            $task_index = filter_input(INPUT_POST, 'taskid', FILTER_VALIDATE_INT);
+            if ($task_index === NULL || $task_index === FALSE) {
+                $errors[] = 'The task cannot be promoted.';
+            } elseif ($task_index == 0) {
+                $errors[] = 'You can\'t promote the first task.';
+            } else {
+                // get the values for the two indexes
+                $task_value = $task_list[$task_index];
+                $prior_task_value = $task_list[$task_index-1];
     
-    case 'Promote Task':
-        
-    case 'Sort Tasks':
-    
-*/
+                // swap the values
+                $task_list[$task_index-1] = $task_value;
+                $task_list[$task_index] = $prior_task_value;
+                break;
+            }
+    // case 'Sort Tasks':
+        case 'Sort Tasks':
+            sort($task_list);
+            break;
+
 }
 
 include('task_list.php');
