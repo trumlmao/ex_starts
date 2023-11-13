@@ -1,6 +1,7 @@
 <?php
 //set default value
 $message = '';
+$test = '';
 
 //get value from POST array
 $action = filter_input(INPUT_POST, 'action');
@@ -28,28 +29,53 @@ switch ($action) {
         break;
     case 'process_data':
         $invoice_date_s = filter_input(INPUT_POST, 'invoice_date');
-        $due_date_s = filter_input(INPUT_POST, 'due_date');
+$due_date_s = filter_input(INPUT_POST, 'due_date');
 
-        // make sure the user enters both dates
 
-        // convert date strings to DateTime objects
-        // and use a try/catch to make sure the dates are valid
+if (!$invoice_date_s || !$due_date_s) {
+    echo "Please enter both invoice date and due date.";
+    
+    exit;
+}
 
-        // make sure the due date is after the invoice date
 
-        // format both dates
-        $invoice_date_f = 'not implemented yet';
-        $due_date_f = 'not implemented yet'; 
-        
-        // get the current date and time and format it
-        $current_date_f = 'not implemented yet';
-        $current_time_f = 'not implemented yet';
-        
-        // get the amount of time between the current date and the due date
-        // and format the due date message
-        $due_date_message = 'not implemented yet';
+try {
+    $invoice_date = new DateTime($invoice_date_s);
+    $due_date = new DateTime($due_date_s);
+} catch (Exception $e) {
+    echo "Invalid date format: " . $e->getMessage();
+    
+    exit;
+}
 
-        break;
+
+if ($due_date < $invoice_date) {
+    echo "Due date must be after the invoice date.";
+    
+    exit;
+}
+
+
+$invoice_date_f = $invoice_date->format('Y-m-d');
+$due_date_f = $due_date->format('Y-m-d');
+
+
+$current_date = new DateTime();
+$current_date_f = $current_date->format('Y-m-d');
+$current_time_f = $current_date->format('H:i:s');
+
+
+$interval = $current_date->diff($due_date);
+$years = $interval->y;
+$months = $interval->m;
+$days = $interval->d;
+if ($due_date < $current_date) {
+    $due_date_message = "This invoice is ". "$years years, $months months, and $days days "."overdue.";
+} else {
+    $due_date_message = "This invoice is due in "."$years years, $months months, and $days days.";
+}
+
+break;
 }
 include 'date_tester.php';
 ?>
