@@ -36,6 +36,20 @@ switch( $action ) {
             $task_list = array_values($task_list);
         }
         break;
+        case 'Modify Task':
+            $modified_task = filter_input(INPUT_POST, 'modifiedtask');
+            $task_index = filter_input(INPUT_POST, 'modifiedtaskid', FILTER_VALIDATE_INT);
+            
+            if ($task_index === NULL || $task_index === FALSE) {
+                $errors[] = 'The task cannot be modified.';
+            } elseif (empty($modified_task)) {
+                $errors[] = 'The modified task cannot be empty.';
+            } else {
+                // Update the task at the specified index
+                $task_list[$task_index] = $modified_task;
+            }
+            break;
+        
 /*
     case 'Modify Task':
     
