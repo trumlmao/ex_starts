@@ -12,7 +12,7 @@
         <div id="data" >
             <label>Customer Type:</label>
             <input type="text" name="type" 
-                   value="<?php echo htmlspecialchars($customer_type); ?>"><br>
+                   value="<?php echo htmlspecialchars($customer_in); ?>"><br>
 
             <label>Invoice Subtotal:</label>
             <input type="text" name="subtotal"
