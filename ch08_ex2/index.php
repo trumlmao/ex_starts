@@ -5,9 +5,15 @@ $scores = array();
 $scores[0] = 70;
 $scores[1] = 80;
 $scores[2] = 90;
-        
+
+$sum = '0';
+
+
 $scores_string = '';
-$score_total = 0;
+$score_total = '0';
+for($i = 0;$i<count($scores);$i++){
+    $score_total += $scores[$i];
+}
 $score_average = 0;
 $max_rolls = 0;
 $average_rolls = 0;
@@ -19,24 +25,30 @@ switch ($action) {
         $scores = $_POST['scores'];
 
         // validate the scores
+       
         // TODO: Convert this if statement to a for loop
-        if (empty($scores[0]) ||
-            empty($scores[1]) ||
-            empty($scores[2]) ||
-            !is_numeric($scores[0]) ||
-            !is_numeric($scores[1]) ||
-            !is_numeric($scores[2])) {
-                $scores_string = 'You must enter three valid numbers for scores.';
-                break;
-        }
+        $isValid = true;
+
+for ($i = 0; $i < 3; $i++) {
+    if (empty($scores[$i]) || !is_numeric($scores[$i])) {
+        $isValid = false;
+        break;
+    }
+}
+
+if (!$isValid) {
+    $scores_string = 'You must enter three valid numbers for scores.';
+} else {
+    // Process the scores
+    $scores_string = implode('|', $scores);
+}
+
 
         // process the scores
+        
         // TODO: Add code that calculates the score total
-        $scores_string = '';
-        foreach ($scores as $s) {
-            $scores_string .= $s . '|';
-        }
-        $scores_string = substr($scores_string, 0, strlen($scores_string)-1);
+        
+        
 
         // calculate the average
         $score_average = $score_total / count($scores);
@@ -53,12 +65,17 @@ switch ($action) {
         $total = 0;
         $count = 0;
         $max_rolls = -INF;
-
+        $rolls = 1;
         // TODO: convert this while loop to a for loop
+        for($i=0;$i<10000;$i++){
+            if(mt_rand(1,6) != $number_to_roll){
+                $rolls++;
+            }
+        }
         while ($count < 10000) {
             $rolls = 1;
-            while (mt_rand(1, 6) != $number_to_roll) {
-                $rolls++;
+            for (; mt_rand(1, 6) != $number_to_roll; $rolls++) {
+               
             }
             $total += $rolls;
             $count++;
